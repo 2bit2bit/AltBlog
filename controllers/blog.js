@@ -1,6 +1,5 @@
-
 exports.getIndex = (req, res, next) => {
-    res.send('display Home page')
+    res.send('home')
 }
 
 
