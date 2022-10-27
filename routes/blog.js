@@ -1,8 +1,12 @@
 const express = require('express')
 const router = express.Router()
 
-router.get('/', (req, res, next) => {
-    res.send('blog route')
-})
+const blogController = require('../controllers/blog')
+
+router.get('/', blogController.getIndex)
+
+router.get('/articles', blogController.getArticles)
+
+router.get('/articles/:articleId', blogController.getArticle)
 
 module.exports = router
