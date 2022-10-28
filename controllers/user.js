@@ -20,8 +20,7 @@ exports.postCreateArticle = (req, res, next) => {
     return tag.trim();
   });
   const body = req.body.body;
-
-  const author = "userId";
+  const author = req.user;
   const reading_time = 3;
 
   const article = new Article({

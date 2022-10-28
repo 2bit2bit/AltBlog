@@ -55,7 +55,7 @@ Blog/Article
 - reading_time
 - tags
 - body is required
-- timestamp
+- timestamparticleId
 ​
 
 Submission

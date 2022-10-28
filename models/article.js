@@ -9,7 +9,10 @@ const articleSchema = new Schema({
     unique: true
   },
   description: String,
-  author: String,
+  author: {
+    type: Schema.Types.ObjectId,
+    ref: 'User'
+  },
   state: {
     type: String,
     enum: ["draft", "published"],

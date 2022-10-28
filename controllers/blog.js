@@ -6,6 +6,7 @@ exports.getIndex = (req, res, next) => {
 
 exports.getArticles = (req, res, next) => {
   Article.find()
+    .populate('author', 'first_name last_name email')
     .then((articles) => {
       console.log(articles);
       res.send("display all articles");
