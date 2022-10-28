@@ -1,7 +1,12 @@
 const Article = require("../models/article");
 
 exports.getArticles = (req, res, next) => {
-  res.send("display all articles by user, editable");
+  Article.find()
+    .then((articles) => {
+      console.log(articles);
+      res.send("display all articles by user, editable");
+    })
+    .catch((err) => console.log(err));
 };
 
 exports.getCreateArticle = (req, res, next) => {
@@ -39,15 +44,58 @@ exports.postCreateArticle = (req, res, next) => {
 };
 
 exports.getEditArticle = (req, res, next) => {
-  res.send("display edit article page");
+  const articleId = req.params.articleId;
+  Article.findById(articleId)
+    .then((article) => {
+      console.log(article);
+      res.send(
+        "display edit article page with details of the particula article"
+      );
+    })
+    .catch((err) => console.log(err));
 };
 
 exports.postEditArticle = (req, res, next) => {
-  res.send("post edit article");
+  const updatedTitle = req.body.title;
+  const updatedDescription = req.body.description;
+  const updatedTags = req.body.tags.split(",").map((tag) => {
+    return tag.trim();
+  });
+  const updatedBody = req.body.body;
+  // const author = "userId";
+  const updatedReading_time = 3;
+
+  const articleId = req.params.articleId;
+
+  Article.findById(articleId)
+    .then((article) => {
+      article.title = updatedTitle;
+      article.description = updatedDescription;
+      article.reading_time = updatedReading_time;
+      article.tags = updatedTags;
+      article.body = updatedBody;
+
+      return article.save();
+    })
+    .then((updatedArticle) => {
+      console.log(updatedArticle);
+      res.send("article updated");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 exports.postDeletetArticle = (req, res, next) => {
-  res.send("delete article");
+  const articleId = req.params.articleId;
+  Article.findByIdAndRemove(articleId)
+    .then((article) => {
+      console.log(article);
+      res.send(
+        "article deleted"
+      );
+    })
+    .catch((err) => console.log(err));
 };
 
 // function calcReadingTime(body) {

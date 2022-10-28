@@ -9,8 +9,8 @@ router.get('/create-article', userController.getCreateArticle)
 router.post('/create-article', userController.postCreateArticle)
 
 router.get('/edit-article/:articleId', userController.getEditArticle)
-router.post('/edit-article', userController.postEditArticle)
+router.post('/edit-article/:articleId', userController.postEditArticle)
 
-router.post('/delete-article', userController.postDeletetArticle)
+router.post('/delete-article/:articleId', userController.postDeletetArticle)
 
 module.exports = router

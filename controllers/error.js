@@ -1,3 +1,3 @@
 exports.error404 = (req, res, next) => {
-    res.send('404 page not found')
+    res.status(404).send('404 page not found')
 }
