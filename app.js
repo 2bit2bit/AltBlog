@@ -29,12 +29,14 @@ app.use((req, res, next) => {
 
 
 //ROUTES
-const blogRoute = require("./routes/blog");
+const blogRoute = require("./routes/blog"); 
 const userRoute = require("./routes/user");
+const authRoute = require("./routes/auth");
 const errorController = require("./controllers/error");
 
 app.use("/user", userRoute);
 app.use("/", blogRoute);
+app.use("/", authRoute);
 app.use("/", errorController.error404);
 
 //LISTEN
@@ -42,16 +44,6 @@ app.use("/", errorController.error404);
 mongoose
   .connect(MONGODB_URI)
   .then(() => {
-
-    // const user = new User({
-    //   email: "2bit2bit@gmail.com",
-    //   first_name: "Ephraim",
-    //   last_name: "Haruna",
-    //   password: "yeayeayea",
-    // });
-
-    // user.save()
-
     app.listen(PORT, () => {
       console.log(`server running on  http://localhost:${PORT}`);
     });
