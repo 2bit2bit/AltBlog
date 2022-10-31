@@ -1,4 +1,5 @@
 const express = require("express");
+const passport = require('passport');
 const path = require("path");
 const mongoose = require("mongoose");
 require("dotenv").config();
@@ -16,25 +17,28 @@ app.set("views", "views");
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use((req, res, next) => {
-  User.findById('635bd70e5547a523459c8f26')
-    .then(user => {
-      req.user = user
-      next()
-    })
-    .catch(err => {
-      console.log(err)
-    })
-})
+// app.use((req, res, next) => {
+//   User.findById('635bd70e5547a523459c8f26')
+//     .then(user => {
+//       req.user = user
+//       next()
+//     })
+//     .catch(err => {
+//       console.log(err)
+//     })
+// })
 
 
 //ROUTES
+
+require("./controllers/auth")
+
 const blogRoute = require("./routes/blog"); 
 const userRoute = require("./routes/user");
 const authRoute = require("./routes/auth");
 const errorController = require("./controllers/error");
 
-app.use("/user", userRoute);
+app.use("/user", passport.authenticate('jwt', { session: false }), userRoute);
 app.use("/", blogRoute);
 app.use("/", authRoute);
 app.use("/", errorController.error404);
