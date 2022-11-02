@@ -1,10 +1,10 @@
+const mongoose = require("mongoose");
 const Article = require("../models/article");
 
 exports.getArticles = (req, res, next) => {
-  Article.find()
+  Article.find({ author: req.user })
     .then((articles) => {
-      console.log(articles);
-      res.send("display all articles by user, editable");
+      res.json(articles);
     })
     .catch((err) => console.log(err));
 };
@@ -66,7 +66,7 @@ exports.postEditArticle = (req, res, next) => {
 
   const articleId = req.params.articleId;
 
-  Article.findById(articleId)
+  Article.findOne({ _id: articleId, author: req.user })
     .then((article) => {
       article.title = updatedTitle;
       article.description = updatedDescription;
@@ -74,11 +74,30 @@ exports.postEditArticle = (req, res, next) => {
       article.tags = updatedTags;
       article.body = updatedBody;
 
+      return article
+        .save()
+        .then((updatedArticle) => {
+          console.log(updatedArticle);
+          res.send("article updated");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+exports.postUpdateState = (req, res, next) => {
+  const articleId = req.params.articleId;
+  Article.findOne({ _id: articleId, author: req.user })
+    .then((article) => {
+      article.state = "published";
       return article.save();
     })
     .then((updatedArticle) => {
-      console.log(updatedArticle);
-      res.send("article updated");
+      res.json(updatedArticle);
     })
     .catch((err) => {
       console.log(err);
@@ -87,12 +106,10 @@ exports.postEditArticle = (req, res, next) => {
 
 exports.postDeletetArticle = (req, res, next) => {
   const articleId = req.params.articleId;
-  Article.findByIdAndRemove(articleId)
+  Article.deleteOne({ _id: articleId, author: req.user })
     .then((article) => {
       console.log(article);
-      res.send(
-        "article deleted"
-      );
+      res.send("article deleted");
     })
     .catch((err) => console.log(err));
 };

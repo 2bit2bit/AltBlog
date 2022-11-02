@@ -5,7 +5,7 @@ exports.getIndex = (req, res, next) => {
 };
 
 exports.getArticles = (req, res, next) => {
-  Article.find()
+  Article.find({state: 'published'})
     .populate('author', 'first_name last_name email')
     .then((articles) => {
       console.log(articles);

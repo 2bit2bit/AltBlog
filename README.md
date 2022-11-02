@@ -6,18 +6,18 @@ You are required to build a blogging api. The general idea here is that the api 
 
 ## Requirements:​
 
-1. Users should have a first_name, last_name, email, password, (you can add other attributes you want to store about the user)
-2. A user should be able to sign up and sign in into the blog app
-3. Use JWT as authentication strategy and expire the token after 1 hour
-4. A blog can b calls te in two states; draft and published
-5. Logged in and not logged in users should be able to get a list of published blogs created
-6. Logged in and not logged in users should be able to to get a published blog
-7. Logged in users should be able to create a blog.
-8. When a blog is created, it is in draft state
-9. The owner of the blog should be able to update the state of the blog to published
-10. The owner of a blog should be able to edit the blog in draft or published state
-11. The owner of the blog should be able to delete the blog in draft or published state
-12. The owner of the blog should be able to get a list of their blogs. 
+1. ** Users should have a first_name, last_name, email, password, (you can add other attributes you want to store about the user)
+2. ** A user should be able to sign up and sign in into the blog app
+3. * Use JWT as authentication strategy and expire the token after 1 hour
+4. ** A blog can b calls te in two states; draft and published
+5. ** Logged in and not logged in users should be able to get a list of published blogs created
+6. ** Logged in and not logged in users should be able to to get a published blog
+7. ** Logged in users should be able to create a blog.
+8. ** When a blog is created, it is in draft state
+9. ** The owner of the blog should be able to update the state of the blog to published
+10. ** The owner of a blog should be able to edit the blog in draft or published state
+11. ** The owner of the blog should be able to delete the blog in draft or published state
+12. * The owner of the blog should be able to get a list of their blogs. 
     - The endpoint should be paginated
     - It should be filterable by state
 13. Blogs created should have title, description, tags, author, timestamp, state, read_count, reading_time and body.
@@ -76,4 +76,3 @@ ___
   
 ​​
 Best of luck!
-
