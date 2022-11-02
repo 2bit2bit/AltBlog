@@ -1,8 +1,24 @@
 const Article = require("../models/article");
 
 exports.getArticles = async (req, res, next) => {
+  const { query } = req;
+  const { state, page = 1, per_page = 1 } = query;
+
+  const findQuery = { author: req.user };
+
+  if (state) {
+    findQuery.state = state;
+    console.log(findQuery)
+  }
+
+
+
   try {
-    const articles = await Article.find({ author: req.user });
+    const articles = await Article
+      .find(findQuery)
+      .skip(page)
+      .limit(per_page)
+
     res.json(articles);
   } catch (err) {
     res.status(500).send("an error occured");
@@ -70,7 +86,7 @@ exports.postEditArticle = async (req, res, next) => {
   const articleId = req.params.articleId;
 
   if (await Article.findOne({ title: updatedTitle })) {
-    console.log(Article.findOne({ title: updatedTitle }))
+    console.log(Article.findOne({ title: updatedTitle }));
     res.send("title already exist, try something different ahahah");
     return;
   }
@@ -124,10 +140,5 @@ exports.postDeletetArticle = async (req, res, next) => {
 
 function calcReadingTime(body) {
   const wordCount = body.split(" ").length;
-  const avgReadingTime = Math.round(wordCount / 200);
-  if (avgReadingTime === 0) {
-    return 1;
-  } else {
-    return avgReadingTime;
-  }
+  return  Math.round(wordCount / 200);  
 }
