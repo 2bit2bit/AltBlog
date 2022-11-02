@@ -3,8 +3,6 @@ const router = express.Router()
 
 const blogController = require('../controllers/blog')
 
-router.get('/', blogController.getIndex)
-
 router.get('/articles', blogController.getArticles)
 
 router.get('/articles/:articleId', blogController.getArticle)

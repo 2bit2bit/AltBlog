@@ -6,30 +6,15 @@ require("dotenv").config();
 
 const User = require("./models/user");
 
-//VALUES FROM .env
 const PORT = process.env.PORT;
 const MONGODB_URI = process.env.MONGODB_URI;
 
-//SETUPS AND MIDDLEWARES
+
 const app = express();
 app.set("view engine", "ejs");
 app.set("views", "views");
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
-
-// app.use((req, res, next) => {
-//   User.findById('635bd70e5547a523459c8f26')
-//     .then(user => {
-//       req.user = user
-//       next()
-//     })
-//     .catch(err => {
-//       console.log(err)
-//     })
-// })
-
-
-//ROUTES
 
 require("./controllers/auth")
 
@@ -43,7 +28,7 @@ app.use("/", blogRoute);
 app.use("/", authRoute);
 app.use("/", errorController.error404);
 
-//LISTEN
+
 
 mongoose
   .connect(MONGODB_URI)

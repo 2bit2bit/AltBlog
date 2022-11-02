@@ -1,19 +1,20 @@
-const mongoose = require("mongoose");
 const Article = require("../models/article");
 
-exports.getArticles = (req, res, next) => {
-  Article.find({ author: req.user })
-    .then((articles) => {
-      res.json(articles);
-    })
-    .catch((err) => console.log(err));
+exports.getArticles = async (req, res, next) => {
+  try {
+    const articles = await Article.find({ author: req.user });
+    res.json(articles);
+  } catch (err) {
+    res.status(500).send("an error occured");
+    console.log(err);
+  }
 };
 
-exports.getCreateArticle = (req, res, next) => {
-  res.send("display create article page");
-};
+// exports.getCreateArticle = (req, res, next) => {
+//   res.send("display create article page");
+// };
 
-exports.postCreateArticle = (req, res, next) => {
+exports.postCreateArticle = async (req, res, next) => {
   const title = req.body.title;
   const description = req.body.description;
   const tags = req.body.tags.split(",").map((tag) => {
@@ -21,7 +22,12 @@ exports.postCreateArticle = (req, res, next) => {
   });
   const body = req.body.body;
   const author = req.user;
-  const reading_time = 3;
+  const reading_time = calcReadingTime(body);
+
+  if (await Article.findOne({ title })) {
+    res.send("title already exist, try something different");
+    return;
+  }
 
   const article = new Article({
     title,
@@ -32,90 +38,96 @@ exports.postCreateArticle = (req, res, next) => {
     body,
   });
 
-  article
-    .save()
-    .then(() => {
-      res.send("post article");
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  try {
+    await article.save();
+    res.json(article);
+  } catch (err) {
+    res.status(500).send("an error occured");
+    console.log(err);
+  }
 };
 
-exports.getEditArticle = (req, res, next) => {
-  const articleId = req.params.articleId;
-  Article.findById(articleId)
-    .then((article) => {
-      console.log(article);
-      res.send(
-        "display edit article page with details of the particula article"
-      );
-    })
-    .catch((err) => console.log(err));
-};
+// exports.getEditArticle = (req, res, next) => {
+//   const articleId = req.params.articleId;
+//   Article.findById(articleId)
+//     .then((article) => {
+//       console.log(article);
+//       res.send(
+//         "display edit article page with details of the particula article"
+//       );
+//     })
+//     .catch((err) => console.log(err));
+// };
 
-exports.postEditArticle = (req, res, next) => {
+exports.postEditArticle = async (req, res, next) => {
   const updatedTitle = req.body.title;
   const updatedDescription = req.body.description;
   const updatedTags = req.body.tags.split(",").map((tag) => {
     return tag.trim();
   });
   const updatedBody = req.body.body;
-  // const author = "userId";
-  const updatedReading_time = 3;
-
+  const updatedReading_time = calcReadingTime(updatedBody);
   const articleId = req.params.articleId;
 
-  Article.findOne({ _id: articleId, author: req.user })
-    .then((article) => {
-      article.title = updatedTitle;
-      article.description = updatedDescription;
-      article.reading_time = updatedReading_time;
-      article.tags = updatedTags;
-      article.body = updatedBody;
+  if (await Article.findOne({ title: updatedTitle })) {
+    console.log(Article.findOne({ title: updatedTitle }))
+    res.send("title already exist, try something different ahahah");
+    return;
+  }
 
-      return article
-        .save()
-        .then((updatedArticle) => {
-          console.log(updatedArticle);
-          res.send("article updated");
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    })
-    .catch((err) => {
-      console.log(err);
+  try {
+    const article = await Article.findOne({ _id: articleId, author: req.user });
+
+    article.title = updatedTitle;
+    article.description = updatedDescription;
+    article.reading_time = updatedReading_time;
+    article.tags = updatedTags;
+    article.body = updatedBody;
+
+    await article.save();
+
+    res.json(article);
+  } catch (err) {
+    res.status(500).send("an error occured");
+    console.log(err);
+  }
+};
+
+exports.postUpdateState = async (req, res, next) => {
+  const articleId = req.params.articleId;
+
+  try {
+    const article = await Article.findOne({ _id: articleId, author: req.user });
+    article.state = "published";
+    await article.save();
+    res.json(article);
+  } catch (err) {
+    res.status(500).send("an error occured");
+    console.log(err);
+  }
+};
+
+exports.postDeletetArticle = async (req, res, next) => {
+  const articleId = req.params.articleId;
+
+  try {
+    const response = await Article.deleteOne({
+      _id: articleId,
+      author: req.user,
     });
+    res.json(response);
+  } catch (err) {
+    res.status(500).send("an error occured");
+    console.log(err);
+  }
 };
 
-exports.postUpdateState = (req, res, next) => {
-  const articleId = req.params.articleId;
-  Article.findOne({ _id: articleId, author: req.user })
-    .then((article) => {
-      article.state = "published";
-      return article.save();
-    })
-    .then((updatedArticle) => {
-      res.json(updatedArticle);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-};
-
-exports.postDeletetArticle = (req, res, next) => {
-  const articleId = req.params.articleId;
-  Article.deleteOne({ _id: articleId, author: req.user })
-    .then((article) => {
-      console.log(article);
-      res.send("article deleted");
-    })
-    .catch((err) => console.log(err));
-};
-
-// function calcReadingTime(body) {
-//     const wordCount = body.split(" ").length
-//     const avgReadingTime = (wordCount / 200)
-
-// }
+function calcReadingTime(body) {
+  const wordCount = body.split(" ").length;
+  const avgReadingTime = Math.round(wordCount / 200);
+  if (avgReadingTime === 0) {
+    return 1;
+  } else {
+    return avgReadingTime;
+  }
+}

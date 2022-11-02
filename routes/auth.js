@@ -5,10 +5,6 @@ require('dotenv').config();
 
 const router = express.Router();
 
-// const authController = require("../controllers/auth");
-
-// router.get('/sign-up', authController.getSignup)
-// router.post('/sign-up', authController.postSignup)
 router.post(
   "/sign-up",
   passport.authenticate("signup", { session: false }),
@@ -20,7 +16,6 @@ router.post(
   }
 );
 
-// router.get('/login', authController.getLogin)
 router.post("/login", async (req, res, next) => {
   passport.authenticate("login", async (err, user, info) => {
     try {
@@ -36,9 +31,7 @@ router.post("/login", async (req, res, next) => {
         if (error) return next(error);
 
         const body = { _id: user._id, email: user.email };
-        //You store the id and email in the payload of the JWT.
-        // You then sign the token with a secret or key (JWT_SECRET), and send back the token to the user.
-        // DO NOT STORE Pemail: "email",
+      
         const token = jwt.sign({ user: body }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
         return res.json({ token });
@@ -48,11 +41,5 @@ router.post("/login", async (req, res, next) => {
     }
   })(req, res, next);
 });
-
-// router.post('/logout', authController.postLogout)
-router.post('/logout', (req, res) => {
-
-})
-
 
 module.exports = router;

@@ -1,25 +1,36 @@
 const Article = require("../models/article");
 
-exports.getIndex = (req, res, next) => {
-  res.send("home");
+exports.getArticles = async (req, res, next) => {
+  try {
+    const articles = await Article.find({ state: "published" })
+    .populate(
+      "author",
+      "first_name last_name email"
+    );
+    
+    res.json(articles);
+  } catch (err) {
+    res.status(500).send('an error occured')
+    console.log(err);
+  }
 };
 
-exports.getArticles = (req, res, next) => {
-  Article.find({state: 'published'})
-    .populate('author', 'first_name last_name email')
-    .then((articles) => {
-      console.log(articles);
-      res.send("display all articles");
-    })
-    .catch((err) => console.log(err));
-};
+exports.getArticle = async (req, res, next) => {
+  const { articleId } = req.params;
 
-exports.getArticle = (req, res, next) => {
-  const articleId = req.params.articleId;
-  Article.findById(articleId)
-    .then((article) => {
-      console.log(article);
-      res.send("display single article");
-    })
-    .catch((err) => console.log(err));
+  try {
+    const article = await Article.findOne({
+      _id: articleId,
+      state: "published",
+    }).populate("author", "first_name last_name email");
+
+    article.read_count++;
+
+    article.save();
+
+    res.json(article);
+  } catch (err) {
+    res.status(500).send('an error occured')
+    console.log(err);
+  }
 };
