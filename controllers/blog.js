@@ -1,5 +1,11 @@
 const Article = require("../models/article");
 
+exports.getIndex = async (req, res, next) => {
+    console.log(req.body)
+    res.json({message: "welcome to AltBlog"})
+}
+
+
 exports.getArticles = async (req, res, next) => {
   const { query } = req;
   const {

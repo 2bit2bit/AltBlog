@@ -67,7 +67,7 @@ exports.postEditArticle = async (req, res, next) => {
     return tag.trim();
   });
   const updatedBody = req.body.body;
-  const updatedReading_time = calcReadingTime(updatedBody);
+  const updatedReading_time = calcReadingTime.calcReadingTime(updatedBody);
   const articleId = req.params.articleId;
 
   if (await Article.findOne({ title: updatedTitle })) {

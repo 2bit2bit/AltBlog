@@ -11,16 +11,19 @@ const articleSchema = new Schema({
   description: String,
   author: {
     type: Schema.Types.ObjectId,
-    ref: 'User'
+    ref: 'User',
+    required: true
   },
   state: {
     type: String,
     enum: ["draft", "published"],
-    default: "draft"
+    default: "draft",
+    required: true
   },
   read_count: {
     type: Number,
     default: 0,
+    required: true
   },
   reading_time: String,
   tags: [String],
@@ -31,6 +34,7 @@ const articleSchema = new Schema({
   timestamp: {
     type: Date,
     default: Date.now,
+    required: true,
   },
 });
 
