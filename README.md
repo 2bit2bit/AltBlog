@@ -45,7 +45,8 @@ Use MongoDB
 ## ​Data Models​
 ___
 ​
-User 
+User work on pagination
+work on order etc
 ​
 - email is required and should be unique
 - first_name and last_name is required
