@@ -10,7 +10,6 @@ passport.use(
     {
       secretOrKey: process.env.JWT_SECRET,
       jwtFromRequest: ExtractJWT.fromUrlQueryParameter("secret_token"),
-      // jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken() // Use this if you are using Bearer token
     },
     async (token, done) => {
       try {

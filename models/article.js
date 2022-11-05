@@ -22,7 +22,7 @@ const articleSchema = new Schema({
     type: Number,
     default: 0,
   },
-  reading_time: Number,
+  reading_time: String,
   tags: [String],
   body: {
     type: String,

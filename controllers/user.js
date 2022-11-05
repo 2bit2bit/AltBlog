@@ -1,17 +1,15 @@
 const Article = require("../models/article");
+const calcReadingTime = require('../utils/reading_time')
 
 exports.getArticles = async (req, res, next) => {
   const { query } = req;
-  const { state, page = 1, per_page = 1 } = query;
+  const { state, page = 0, per_page = 5 } = query;
 
   const findQuery = { author: req.user };
 
   if (state) {
     findQuery.state = state;
-    console.log(findQuery)
   }
-
-
 
   try {
     const articles = await Article
@@ -21,14 +19,12 @@ exports.getArticles = async (req, res, next) => {
 
     res.json(articles);
   } catch (err) {
-    res.status(500).send("an error occured");
+    res.status(500).json({message: "an error occured"});
     console.log(err);
   }
 };
 
-// exports.getCreateArticle = (req, res, next) => {
-//   res.send("display create article page");
-// };
+
 
 exports.postCreateArticle = async (req, res, next) => {
   const title = req.body.title;
@@ -38,10 +34,10 @@ exports.postCreateArticle = async (req, res, next) => {
   });
   const body = req.body.body;
   const author = req.user;
-  const reading_time = calcReadingTime(body);
+  const reading_time = calcReadingTime.calcReadingTime(body);
 
   if (await Article.findOne({ title })) {
-    res.send("title already exist, try something different");
+    res.status(202).json({message : "title already exist, try something different"});
     return;
   }
 
@@ -58,22 +54,11 @@ exports.postCreateArticle = async (req, res, next) => {
     await article.save();
     res.json(article);
   } catch (err) {
-    res.status(500).send("an error occured");
+    res.status(500).json({message: "an error occured"});
     console.log(err);
   }
 };
 
-// exports.getEditArticle = (req, res, next) => {
-//   const articleId = req.params.articleId;
-//   Article.findById(articleId)
-//     .then((article) => {
-//       console.log(article);
-//       res.send(
-//         "display edit article page with details of the particula article"
-//       );
-//     })
-//     .catch((err) => console.log(err));
-// };
 
 exports.postEditArticle = async (req, res, next) => {
   const updatedTitle = req.body.title;
@@ -87,7 +72,7 @@ exports.postEditArticle = async (req, res, next) => {
 
   if (await Article.findOne({ title: updatedTitle })) {
     console.log(Article.findOne({ title: updatedTitle }));
-    res.send("title already exist, try something different ahahah");
+    res.status(202).json({message : "title already exist, try something different"});
     return;
   }
 
@@ -104,7 +89,7 @@ exports.postEditArticle = async (req, res, next) => {
 
     res.json(article);
   } catch (err) {
-    res.status(500).send("an error occured");
+    res.status(500).json({message: "an error occured"});
     console.log(err);
   }
 };
@@ -118,7 +103,7 @@ exports.postUpdateState = async (req, res, next) => {
     await article.save();
     res.json(article);
   } catch (err) {
-    res.status(500).send("an error occured");
+    res.status(500).json({message: "an error occured"});
     console.log(err);
   }
 };
@@ -133,12 +118,7 @@ exports.postDeletetArticle = async (req, res, next) => {
     });
     res.json(response);
   } catch (err) {
-    res.status(500).send("an error occured");
+    res.status(500).json({message: "an error occured"});
     console.log(err);
   }
 };
-
-function calcReadingTime(body) {
-  const wordCount = body.split(" ").length;
-  return  Math.round(wordCount / 200);  
-}

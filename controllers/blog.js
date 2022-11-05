@@ -56,7 +56,7 @@ exports.getArticles = async (req, res, next) => {
 
     res.json(articles);
   } catch (err) {
-    res.status(500).send("an error occured");
+    res.status(500).json({message: "an error occured"});
     console.log(err);
   }
 };
@@ -76,7 +76,7 @@ exports.getArticle = async (req, res, next) => {
 
     res.json(article);
   } catch (err) {
-    res.status(500).send("an error occured");
+    res.status(500).json({message: "an error occured"});
     console.log(err);
   }
 };
