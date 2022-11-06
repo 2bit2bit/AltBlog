@@ -2,7 +2,6 @@
 This is an api for a blogging app
 ---
 
-Endpoints can be tested with thunder-collection_AltBlog.json file 
 
 ## Requirements
 1. User should be able to register 
