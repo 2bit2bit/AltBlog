@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const connect = (url) => {
-    mongoose.connect(url)
+    mongoose.connect(url || 'mongodb://localhost:27017')
 
     mongoose.connection.on("connected", () => {
         console.log("Connected to MongoDB Successfully");

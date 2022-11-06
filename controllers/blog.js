@@ -1,7 +1,6 @@
 const Article = require("../models/article");
 
 exports.getIndex = async (req, res, next) => {
-    console.log(req.body)
     res.json({message: "welcome to AltBlog"})
 }
 

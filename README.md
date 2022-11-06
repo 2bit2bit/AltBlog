@@ -118,8 +118,8 @@ Success
 
 - Route: /user/create-article
 - Method: POST
-- Query Parameters: 
-   - secret_token = {token}
+- Header
+    - Authorization: Bearer {token}
 - Body: 
 ```
 {
@@ -157,8 +157,9 @@ Success
 
 - Route: user/articles
 - Method: GET
+- Header
+  - Authorization: Bearer {token}
 - Query Parameters: 
-   - secret_token
    - state
    - page (default: 0)
    - per_page (default: 5)
@@ -209,8 +210,8 @@ Success
 
 - Route: /edit-article/:articleId/update_state
 - Method: PUT
-- Query Parameters: 
-   - secret_token {token}
+- Header
+    - Authorization: Bearer {token}
 - Responses
 
 Success
@@ -239,8 +240,8 @@ Success
 
 - Route: /edit-article/:articleId
 - Method: PUT
-- Query Parameters: 
-   - secret_token = {token}
+- Header
+    - Authorization: Bearer {token}
 - Body: 
 ```
 {
@@ -279,8 +280,8 @@ Success
 
 - Route: /delete-article/:articleId
 - Method: DELETE
-- Query Parameters: 
-   - secret_token {token}
+- Header
+    - Authorization: Bearer {token}
 - Responses
 
 Success
@@ -310,9 +311,9 @@ Success
 
 - Route: /articles
 - Method: GET
-- - Query Parameters:
+- Query Parameters:
    - title
-   - author
+   - autho r
    - tags
    - order (asc || desc)
    - order_by (read_count, reading_time, timestamp)

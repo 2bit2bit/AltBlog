@@ -52,7 +52,7 @@ exports.postCreateArticle = async (req, res, next) => {
 
   try {
     await article.save();
-    res.json(article);
+    res.status(201).json(article);
   } catch (err) {
     res.status(500).json({message: "an error occured"});
     console.log(err);
@@ -87,7 +87,7 @@ exports.postEditArticle = async (req, res, next) => {
 
     await article.save();
 
-    res.json(article);
+    res.status(201).json(article);
   } catch (err) {
     res.status(500).json({message: "an error occured"});
     console.log(err);
@@ -101,7 +101,7 @@ exports.postUpdateState = async (req, res, next) => {
     const article = await Article.findOne({ _id: articleId, author: req.user });
     article.state = "published";
     await article.save();
-    res.json(article);
+    res.status(201).json(article);
   } catch (err) {
     res.status(500).json({message: "an error occured"});
     console.log(err);
@@ -116,7 +116,7 @@ exports.postDeletetArticle = async (req, res, next) => {
       _id: articleId,
       author: req.user,
     });
-    res.json(response);
+    res.status(202).json(response);
   } catch (err) {
     res.status(500).json({message: "an error occured"});
     console.log(err);
